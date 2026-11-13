@@ -1,0 +1,115 @@
+@import 'tailwindcss';
+
+/* Cores e fontes extraídas do Figma (NutriDecifra — App Design) */
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --color-brand: #1f7a4d;
+  --color-brand-dark: #1a2b22;
+  --color-brand-mid: #2e8b57;
+  --color-brand-light: #5bd292;
+  --color-brand-soft: #a6d9bb;
+  --color-brand-tint: #e8f5ee;
+  --color-brand-tint2: #f4faf6;
+  --color-brand-mint: #d8efe0;
+  --color-brand-mint2: #7cc79a;
+
+  --color-ink: #1a2b22;
+  --color-muted: #5c6b63;
+  --color-faint: #9aa89f;
+  --color-line: #e2e8e5;
+  --color-track: #f0f4f1;
+  --color-page: #f8faf8;
+
+  --color-score-a: #43a047;
+  --color-score-b: #7cb342;
+  --color-score-c: #ffb300;
+  --color-score-d: #ff8a3d;
+  --color-score-e: #e84141;
+
+  --color-danger-bg: #fdecec;
+  --color-danger-ink: #9b1c1c;
+  --color-warn-bg: #fff4ec;
+  --color-warn-ink: #9a4a18;
+  --color-caution-bg: #fff8e0;
+  --color-caution-ink: #7a5c00;
+
+  --color-cam: #0e0f11;
+  --color-cam-2: #1a1c1f;
+  --color-cam-3: #1f2225;
+  --color-cam-4: #2b3035;
+  --color-cam-5: #3c434a;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background: #dfe9e3;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+/* ---------- Acessibilidade (tela 17) ---------- */
+.a11y-large-text {
+  zoom: 1.12;
+}
+.a11y-contrast {
+  filter: contrast(1.25) saturate(1.1);
+}
+.a11y-contrast .text-muted,
+.a11y-contrast .text-faint {
+  color: #2c3a33 !important;
+}
+.a11y-reduce-motion *,
+.a11y-reduce-motion *::before,
+.a11y-reduce-motion *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ---------- Animações ---------- */
+@keyframes scanline {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(var(--scan-distance, 300px)); }
+  100% { transform: translateY(0); }
+}
+.animate-scanline {
+  animation: scanline 2.6s ease-in-out infinite;
+}
+
+@keyframes dotpulse {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+.animate-dot {
+  animation: dotpulse 1.2s ease-in-out infinite;
+}
+
+@keyframes fadeup {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fadeup {
+  animation: fadeup 0.25s ease-out both;
+}
+
+/* rolagem sem barra visível dentro da "tela" do celular */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
