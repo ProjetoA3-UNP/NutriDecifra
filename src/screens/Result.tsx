@@ -14,6 +14,8 @@ import {
   spoonsText,
 } from '../lib/nutrition'
 import { saveScan, toggleFavorite } from '../lib/actions'
+import { AlertIcon, SpoonIcon } from '../components/icons'
+import { Check, CircleCheck, Heart } from 'lucide-react'
 
 /** 06 · Resultado (análise do produto) */
 export default function Result() {
@@ -116,16 +118,16 @@ export default function Result() {
             onClick={onFavorite}
             aria-pressed={scan.favorite}
             aria-label={scan.favorite ? 'Remover dos favoritos' : 'Favoritar'}
-            className="-m-[10px] flex size-[44px] items-center justify-center border-0 bg-transparent p-0 text-[22px] leading-none"
+            className="-m-[10px] flex size-[44px] items-center justify-center border-0 bg-transparent p-0"
             style={{ color: scan.favorite ? '#e84141' : '#1a2b22' }}
           >
-            {scan.favorite ? '♥' : '♡'}
+            <Heart size={23} fill={scan.favorite ? 'currentColor' : 'none'} aria-hidden />
           </button>
         </div>
 
         {/* produto */}
         <div className="flex min-h-[126px] items-start rounded-[20px] bg-white px-[16px] py-[18px]">
-          <ProductThumb product={scan.product} imageUrl={scan.image_url} grade={grade} size={90} radius={16} emojiSize={48} />
+          <ProductThumb product={scan.product} imageUrl={scan.image_url} grade={grade} size={90} radius={16} iconSize={42} />
           <div className="ml-[16px] min-w-0 flex-1 pt-[2px]">
             <p className="m-0 text-[17px] font-bold leading-[1.2] text-ink">{scan.product_name}</p>
             {sub && <p className="m-0 mt-[4px] text-[13px] leading-[normal] text-muted">{sub}</p>}
@@ -149,9 +151,11 @@ export default function Result() {
             {analysis.sugarBasis !== null ? spoonsText(analysis.spoons) : 'Açúcar não informado no rótulo'}
           </p>
           {spoonsRounded > 0 && (
-            <p className="m-0 mt-[14px] text-[22px] leading-[normal]" aria-hidden>
-              {Array.from({ length: Math.min(spoonsRounded, 10) }, () => '🥄').join('  ')}
-              {spoonsRounded > 10 && <span className="ml-[6px] text-[14px] font-bold text-muted">+{spoonsRounded - 10}</span>}
+            <p className="m-0 mt-[14px] flex flex-wrap items-center gap-[8px] text-score-d" aria-hidden>
+              {Array.from({ length: Math.min(spoonsRounded, 10) }, (_, i) => (
+                <SpoonIcon key={i} size={22} />
+              ))}
+              {spoonsRounded > 10 && <span className="text-[14px] font-bold text-muted">+{spoonsRounded - 10}</span>}
             </p>
           )}
           {analysis.sugarBasis !== null && (
@@ -188,7 +192,7 @@ export default function Result() {
         <div className="mt-[12px] flex flex-col gap-[10px] pb-[24px]">
           {alerts.length === 0 && (
             <div className="flex min-h-[52px] items-center rounded-[14px] bg-brand-tint px-[16px] text-[12px] font-medium text-brand">
-              <span className="mr-[14px] text-[18px]">✅</span>
+              <CircleCheck size={19} className="mr-[14px] shrink-0" aria-hidden />
               Nenhum alerta para o seu perfil
             </div>
           )}
@@ -200,7 +204,9 @@ export default function Result() {
                 className="flex min-h-[52px] items-center rounded-[14px] px-[16px] py-[8px]"
                 style={{ background: tone.bg }}
               >
-                <span className="mr-[14px] w-[20px] shrink-0 text-[18px] leading-none">{a.emoji}</span>
+                <span className="mr-[14px] flex w-[20px] shrink-0" style={{ color: tone.ink }}>
+                  <AlertIcon kind={a.kind} severity={a.severity} size={19} />
+                </span>
                 <span className="text-[12px] font-medium leading-[1.35]" style={{ color: tone.ink }}>
                   {a11y.simpleLanguage ? simpleAlertText(a, scan.product) : a.short}
                 </span>
@@ -230,7 +236,15 @@ export default function Result() {
           disabled={busy}
           className="flex h-[54px] flex-[103] items-center justify-center rounded-[14px] border-[1.5px] border-solid border-brand bg-white text-[13px] font-bold text-brand"
         >
-          {busy ? <Spinner /> : scan.saved ? 'Salvo ✓' : 'Salvar'}
+          {busy ? (
+            <Spinner />
+          ) : scan.saved ? (
+            <span className="flex items-center gap-[5px]">
+              Salvo <Check size={15} strokeWidth={3} aria-hidden />
+            </span>
+          ) : (
+            'Salvar'
+          )}
         </button>
       </div>
     </div>

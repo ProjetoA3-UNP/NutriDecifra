@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { BackSquare, Screen } from '../components/ui'
-import { alertEmoji, alertTone } from '../lib/nutrition'
+import { alertTone } from '../lib/nutrition'
+import { AlertIcon } from '../components/icons'
+import { Lightbulb, Settings } from 'lucide-react'
 import { relativeTime } from '../lib/time'
 import { markAlertsRead } from '../lib/actions'
 
@@ -55,9 +57,9 @@ export default function Alerts() {
           <Link
             to="/alertas/personalizar"
             aria-label="Personalizar alertas"
-            className="mt-[4px] flex size-[44px] shrink-0 items-center justify-center rounded-[14px] bg-white text-[22px] text-ink no-underline"
+            className="mt-[4px] flex size-[44px] shrink-0 items-center justify-center rounded-[14px] bg-white text-ink no-underline"
           >
-            ⚙
+            <Settings size={21} aria-hidden />
           </Link>
         </div>
 
@@ -87,10 +89,10 @@ export default function Alerts() {
                 <span className="absolute inset-y-0 left-0 w-[5px]" style={{ background: tone.stripe }} />
                 <div className="flex px-[20px] pt-[16px]">
                   <span
-                    className="flex size-[42px] shrink-0 items-center justify-center rounded-[12px] text-[22px]"
-                    style={{ background: tone.bg }}
+                    className="flex size-[42px] shrink-0 items-center justify-center rounded-[12px]"
+                    style={{ background: tone.bg, color: tone.stripe }}
                   >
-                    {alertEmoji(a.kind, a.severity)}
+                    <AlertIcon kind={a.kind} severity={a.severity} size={22} />
                   </span>
                   <div className="ml-[14px] min-w-0 flex-1">
                     <div className="flex items-start gap-[8px]">
@@ -115,9 +117,10 @@ export default function Alerts() {
 
         <Link
           to="/alertas/personalizar"
-          className="mt-[26px] flex min-h-[60px] items-center rounded-[14px] bg-brand-tint px-[20px] py-[12px] text-[12px] font-medium leading-[1.25] text-brand no-underline"
+          className="mt-[26px] flex min-h-[60px] items-center gap-[10px] rounded-[14px] bg-brand-tint px-[20px] py-[12px] text-[12px] font-medium leading-[1.25] text-brand no-underline"
         >
-          💡&nbsp;&nbsp;Personalize seus alertas no perfil para receber avisos mais precisos.
+          <Lightbulb size={18} className="shrink-0" aria-hidden />
+          Personalize seus alertas no perfil para receber avisos mais precisos.
         </Link>
       </div>
     </Screen>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
+import { homeFor } from '../lib/roles'
 import logo from '../assets/figma/logo.png'
 import decorMid from '../assets/figma/splash-decor-mid.svg'
 import decorSmall from '../assets/figma/splash-decor-small.svg'
@@ -14,7 +15,7 @@ export const ONBOARDING_KEY = 'nd.onboarding.done'
 
 /** 01 · Início da apresentação (splash) */
 export default function Splash() {
-  const { ready, session } = useApp()
+  const { ready, session, role } = useApp()
   const navigate = useNavigate()
   const [minTimePassed, setMinTimePassed] = useState(false)
 
@@ -31,8 +32,8 @@ export default function Splash() {
     } catch {
       /* sem armazenamento: mostra a apresentação */
     }
-    navigate(session ? '/inicio' : seen ? '/entrar' : '/boas-vindas', { replace: true })
-  }, [ready, minTimePassed, session, navigate])
+    navigate(session ? homeFor(role) : seen ? '/entrar' : '/boas-vindas', { replace: true })
+  }, [ready, minTimePassed, session, role, navigate])
 
   return (
     <div className="relative flex h-full flex-col items-center overflow-hidden bg-brand">

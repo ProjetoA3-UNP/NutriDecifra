@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useApp } from '../context/AppContext'
 import { BackSquare } from '../components/ui'
+import { Check, Flame, Gift, Lock, Salad, Trophy } from 'lucide-react'
 import { badges, healthyChoices, levelInfo, streakDays, totalPoints, weeklyChallenge, POINTS } from '../lib/gamification'
 
 const nf = (n: number) => n.toLocaleString('pt-BR')
@@ -27,15 +28,15 @@ export default function Gamification() {
         </div>
         <div className="ml-[12px] pt-[4px]">
           <h1 className="m-0 text-[22px] font-bold leading-[normal] text-ink">Suas conquistas</h1>
-          <p className="m-0 mt-[7px] text-[13px] leading-[normal] text-muted">Continue assim e ganhe mais badges 🌱</p>
+          <p className="m-0 mt-[7px] text-[13px] leading-[normal] text-muted">Continue assim e ganhe mais badges</p>
         </div>
       </div>
 
       {/* nível */}
       <div className="relative mt-[24px] h-[160px] overflow-hidden rounded-[22px] bg-brand px-[20px] pt-[20px]">
         <span className="decor absolute right-[8px] top-[5px] size-[100px] rounded-full bg-[#2e8b57]/55" />
-        <span className="decor absolute right-[24px] top-[20px] flex size-[64px] items-center justify-center rounded-full bg-brand-light/55 text-[40px]">
-          🏆
+        <span className="decor absolute right-[24px] top-[20px] flex size-[64px] items-center justify-center rounded-full bg-brand-light/55 text-[#ffd54f]">
+          <Trophy size={32} strokeWidth={1.9} aria-hidden />
         </span>
         <p className="relative m-0 text-[11px] font-bold leading-[normal] text-brand-soft">NÍVEL {level.number}</p>
         <p className="relative m-0 mt-[5px] text-[22px] font-bold leading-[normal] text-white">{level.name}</p>
@@ -56,14 +57,14 @@ export default function Gamification() {
       {/* estatísticas */}
       <div className="mt-[18px] flex gap-[11px]">
         <div className="h-[82px] flex-1 rounded-[18px] bg-white px-[16px] pt-[14px]">
-          <span className="block text-[18px] leading-[22px]">🔥</span>
+          <Flame size={20} className="block text-score-d" aria-hidden />
           <span className="mt-[4px] block text-[18px] font-bold leading-[22px] text-ink">
             {streak} {streak === 1 ? 'dia' : 'dias'}
           </span>
           <span className="block text-[12px] leading-[15px] text-muted">Sequência</span>
         </div>
         <div className="h-[82px] flex-1 rounded-[18px] bg-white px-[16px] pt-[14px]">
-          <span className="block text-[18px] leading-[22px]">🥗</span>
+          <Salad size={20} className="block text-brand" aria-hidden />
           <span className="mt-[4px] block text-[18px] font-bold leading-[22px] text-ink">{healthy}</span>
           <span className="block text-[12px] leading-[15px] text-muted">Escolhas saudáveis</span>
         </div>
@@ -86,13 +87,17 @@ export default function Gamification() {
             aria-label={`${b.label}: ${b.description}${b.unlocked ? ' (conquistada)' : ' (bloqueada)'}`}
           >
             <span
-              className="flex size-[62px] items-center justify-center rounded-full text-[28px]"
+              className="flex size-[62px] items-center justify-center rounded-full"
               style={{
                 background: b.unlocked ? b.bg : '#eef1ef',
                 outline: selected === b.id ? '2px solid #1f7a4d' : 'none',
               }}
             >
-              {b.unlocked ? b.icon : <span className="opacity-60">🔒</span>}
+              {b.unlocked ? (
+                <b.icon size={27} strokeWidth={1.9} style={{ color: b.color }} aria-hidden />
+              ) : (
+                <Lock size={22} className="text-faint" aria-hidden />
+              )}
             </span>
             <span className={`mt-[6px] text-[10px] leading-[12px] ${b.unlocked ? 'font-medium text-ink' : 'text-faint'}`}>
               {b.unlocked ? b.label : 'Bloqueado'}
@@ -102,7 +107,14 @@ export default function Gamification() {
       </div>
       {sel && (
         <p className="animate-fadeup m-0 mt-[12px] rounded-[12px] bg-white px-[14px] py-[10px] text-[12px] text-muted">
-          <b className="text-ink">{sel.icon} {sel.label}:</b> {sel.description}. {sel.unlocked ? '✓ Conquistada' : 'Ainda bloqueada'}
+          <b className="text-ink">{sel.label}:</b> {sel.description}.{' '}
+          {sel.unlocked ? (
+            <span className="inline-flex items-center gap-[3px] font-bold text-brand">
+              <Check size={12} strokeWidth={3} aria-hidden /> Conquistada
+            </span>
+          ) : (
+            'Ainda bloqueada'
+          )}
         </p>
       )}
 
@@ -110,8 +122,9 @@ export default function Gamification() {
       <div className="mt-[22px] min-h-[128px] rounded-[20px] bg-white px-[16px] pb-[18px] pt-[16px]">
         <p className="m-0 text-[10px] font-bold leading-[normal] text-score-d">DESAFIO DA SEMANA</p>
         <p className="m-0 mt-[6px] text-[15px] font-bold leading-[normal] text-ink">Escaneie {ch.goal} produtos diferentes</p>
-        <p className="m-0 mt-[6px] text-[12px] leading-[normal] text-muted">
-          🎁 Recompensa: {POINTS.weeklyChallenge} XP + badge especial
+        <p className="m-0 mt-[6px] flex items-center gap-[6px] text-[12px] leading-[normal] text-muted">
+          <Gift size={14} className="text-score-d" aria-hidden />
+          Recompensa: {POINTS.weeklyChallenge} XP + badge especial
         </p>
         <div className="mt-[12px] flex items-center gap-[14px]">
           <div className="h-[10px] flex-1 rounded-[5px] bg-track">

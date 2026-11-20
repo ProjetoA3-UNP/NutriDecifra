@@ -5,6 +5,7 @@ import { fetchProduct, ProductNotFoundError } from '../lib/off'
 import { fmt, nutrient100, isLiquid, num, productName } from '../lib/nutrition'
 import { recordScan } from '../lib/actions'
 import type { OffProduct, Scan } from '../lib/types'
+import { Check, Circle, ExternalLink, X } from 'lucide-react'
 
 type Phase = 'fetch' | 'compare' | 'record' | 'done' | 'notfound' | 'error'
 
@@ -87,9 +88,9 @@ export default function Analyzing() {
           type="button"
           aria-label="Fechar"
           onClick={() => navigate('/scanner', { replace: true })}
-          className="-ml-[8px] flex size-[56px] items-center justify-center rounded-full border-0 bg-transparent text-[24px] text-white"
+          className="-ml-[8px] flex size-[56px] items-center justify-center rounded-full border-0 bg-transparent text-white"
         >
-          ×
+          <X size={24} aria-hidden />
         </button>
         <h1 className="m-0 ml-[6px] text-[16px] font-bold leading-[normal]">Analisando rótulo</h1>
       </div>
@@ -132,9 +133,9 @@ export default function Analyzing() {
               href={`https://world.openfoodfacts.org/cgi/product.pl?type=add&code=${code}`}
               target="_blank"
               rel="noreferrer"
-              className="mt-[12px] inline-block text-[13px] font-bold text-brand-light"
+              className="mt-[12px] inline-flex items-center gap-[4px] text-[13px] font-bold text-brand-light"
             >
-              Cadastrar este produto no Open Food Facts →
+              Cadastrar este produto no Open Food Facts <ExternalLink size={14} aria-hidden />
             </a>
           </>
         ) : phase === 'error' ? (
@@ -156,9 +157,10 @@ export default function Analyzing() {
                 return (
                   <li
                     key={s.label}
-                    className={`text-[14px] font-medium leading-[normal] ${s.done ? 'text-brand-soft' : current ? 'text-white' : 'text-faint'}`}
+                    className={`flex items-center gap-[8px] text-[14px] font-medium leading-[normal] ${s.done ? 'text-brand-soft' : current ? 'text-white' : 'text-faint'}`}
                   >
-                    {s.done ? '✓' : '•'} {s.label}
+                    {s.done ? <Check size={16} strokeWidth={3} aria-hidden /> : <Circle size={8} fill="currentColor" className="mx-[4px]" aria-hidden />}
+                    {s.label}
                   </li>
                 )
               })}

@@ -1,3 +1,6 @@
+/** Perfil de acesso: Consumidor, Nutricionista ou Administrador */
+export type Role = 'consumer' | 'nutritionist' | 'admin'
+
 export type Restriction = 'gluten' | 'lactose' | 'sugar' | 'sodium'
 export type Goal = 'reduce_sugar' | 'reduce_sodium' | 'eat_better' | 'avoid_ultra'
 export type Grade = 'a' | 'b' | 'c' | 'd' | 'e'
@@ -34,6 +37,8 @@ export interface Profile {
   notifications: boolean
   accessibility: AccessibilityPrefs
   plan: string
+  /** ausente quando o banco ainda não recebeu a migration 002 (vale como consumer) */
+  role?: Role
   created_at: string
 }
 
@@ -112,4 +117,14 @@ export interface PointsEvent {
   reason: string
   ref: string | null
   created_at: string
+}
+
+/** Vínculo paciente ↔ nutricionista, autorizado pelo paciente */
+export interface CareLink {
+  id: string
+  patient_id: string
+  nutritionist_id: string
+  status: 'active' | 'revoked'
+  created_at: string
+  revoked_at: string | null
 }

@@ -3,13 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { BackSquare, ErrorBox, Spinner, Switch } from '../components/ui'
 import type { AccessibilityPrefs } from '../lib/types'
+import { BookOpenText, Contrast, MoveHorizontal, Volume2, type LucideIcon } from 'lucide-react'
 
-const TOOLS: { key: keyof AccessibilityPrefs; icon: string; iconClass?: string; title: string; sub: string; bg: string }[] = [
+const TOOLS: { key: keyof AccessibilityPrefs; icon: string | LucideIcon; iconClass?: string; title: string; sub: string; bg: string }[] = [
   { key: 'largeText', icon: 'Aa', iconClass: 'text-[13px] font-bold text-brand', title: 'Texto maior', sub: 'Aumenta fontes e áreas de toque', bg: '#e8f5ee' },
-  { key: 'highContrast', icon: '◐', title: 'Alto contraste', sub: 'Melhora leitura em baixa visão', bg: '#f0f4f1' },
-  { key: 'voice', icon: '🔈', title: 'Leitura em voz alta', sub: 'Lê alertas e resultados do rótulo', bg: '#f0f4f1' },
-  { key: 'reduceMotion', icon: '↔', iconClass: 'text-[16px] font-bold text-brand', title: 'Reduzir animações', sub: 'Transições mais simples e previsíveis', bg: '#e8f5ee' },
-  { key: 'simpleLanguage', icon: '✓', iconClass: 'text-[14px] font-bold text-brand', title: 'Linguagem simples', sub: 'Resume termos técnicos do rótulo', bg: '#e8f5ee' },
+  { key: 'highContrast', icon: Contrast, title: 'Alto contraste', sub: 'Melhora leitura em baixa visão', bg: '#f0f4f1' },
+  { key: 'voice', icon: Volume2, title: 'Leitura em voz alta', sub: 'Lê alertas e resultados do rótulo', bg: '#f0f4f1' },
+  { key: 'reduceMotion', icon: MoveHorizontal, iconClass: 'text-brand', title: 'Reduzir animações', sub: 'Transições mais simples e previsíveis', bg: '#e8f5ee' },
+  { key: 'simpleLanguage', icon: BookOpenText, iconClass: 'text-brand', title: 'Linguagem simples', sub: 'Resume termos técnicos do rótulo', bg: '#e8f5ee' },
 ]
 
 /** 17 · Acessibilidade */
@@ -71,7 +72,7 @@ export default function Accessibility() {
                 className={`flex size-[32px] shrink-0 items-center justify-center rounded-[9px] text-[14px] leading-none text-ink ${t.iconClass ?? ''}`}
                 style={{ background: t.bg }}
               >
-                {t.icon}
+                {typeof t.icon === 'string' ? t.icon : <t.icon size={17} aria-hidden />}
               </span>
               <div className="ml-[14px] min-w-0 flex-1">
                 <p className="m-0 text-[13px] font-bold leading-[normal] text-ink">{t.title}</p>

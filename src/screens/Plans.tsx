@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { BackArrow, Toast } from '../components/ui'
+import { ArrowRight, Building, Check, Crown, Star, X } from 'lucide-react'
 
 const MONTHLY = 9.9
 const ANNUAL_DISCOUNT = 0.25
@@ -14,7 +15,7 @@ export default function Plans() {
 
   const check = (text: string, ok = true, light = false) => (
     <li className={`flex items-center gap-[8px] text-[13px] leading-[normal] ${light ? 'text-white' : ok ? 'text-muted' : 'text-faint'}`}>
-      <span className="w-[12px] text-[12px]">{ok ? '✓' : '✕'}</span>
+      <span className="flex w-[12px]">{ok ? <Check size={13} strokeWidth={3} aria-hidden /> : <X size={13} strokeWidth={3} aria-hidden />}</span>
       {text}
     </li>
   )
@@ -67,11 +68,12 @@ export default function Plans() {
       {/* Premium */}
       <div className="relative mt-[16px] overflow-hidden rounded-[20px] bg-brand px-[16px] pb-[4px] pt-[18px]">
         <span className="decor absolute right-[13px] top-[23px] size-[120px] rounded-full bg-[#2e8b57]/55" />
-        <span className="decor absolute right-[35px] top-[45px] flex size-[76px] items-center justify-center rounded-full bg-brand-light/55 text-[44px]">
-          👑
+        <span className="decor absolute right-[35px] top-[45px] flex size-[76px] items-center justify-center rounded-full bg-brand-light/55 text-white">
+          <Crown size={38} strokeWidth={1.8} aria-hidden />
         </span>
-        <span className="relative inline-flex h-[22px] items-center rounded-[11px] bg-[#fff3c4] px-[10px] text-[10px] font-bold text-caution-ink">
-          ⭐ MAIS POPULAR
+        <span className="relative inline-flex h-[22px] items-center gap-[4px] rounded-[11px] bg-[#fff3c4] px-[10px] text-[10px] font-bold text-caution-ink">
+          <Star size={11} fill="currentColor" aria-hidden />
+          MAIS POPULAR
         </span>
         <p className="relative m-0 mt-[8px] text-[22px] font-bold leading-[normal] text-white">Premium</p>
         <p className="relative m-0 mt-[5px] text-white">
@@ -95,7 +97,9 @@ export default function Plans() {
 
       {/* Institucional */}
       <div className="mt-[16px] flex rounded-[20px] bg-white px-[16px] pb-[16px] pt-[20px]">
-        <span className="text-[28px] leading-none">🏢</span>
+        <span className="flex size-[40px] shrink-0 items-center justify-center rounded-[12px] bg-brand-tint text-brand">
+          <Building size={22} aria-hidden />
+        </span>
         <div className="ml-[16px]">
           <p className="m-0 text-[15px] font-bold leading-[normal] text-ink">Institucional (B2B)</p>
           <p className="m-0 mt-[4px] text-[12px] leading-[1.25] text-muted">
@@ -106,9 +110,9 @@ export default function Plans() {
           <button
             type="button"
             onClick={() => setToast('Atendimento a empresas em breve.')}
-            className="mt-[8px] border-0 bg-transparent p-0 text-[12px] font-bold text-brand"
+            className="mt-[8px] inline-flex items-center gap-[4px] border-0 bg-transparent p-0 text-[12px] font-bold text-brand"
           >
-            Falar com vendas →
+            Falar com vendas <ArrowRight size={14} aria-hidden />
           </button>
         </div>
       </div>

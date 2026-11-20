@@ -6,6 +6,9 @@ import { VitePWA } from 'vite-plugin-pwa'
 // https://vite.dev/config/
 export default defineConfig({
   server: {
+    // porta fixa: se a 5173 estiver ocupada, o Vite avisa em vez de trocar de porta sozinho
+    port: 5173,
+    strictPort: true,
     // mesmo redirecionamento que o vercel.json faz em produção
     proxy: {
       '/off-search': {

@@ -5,6 +5,7 @@ import { BackArrow, ErrorBox, Loading, Spinner, Switch } from '../components/ui'
 import type { Restriction } from '../lib/types'
 import { analyze, fmt } from '../lib/nutrition'
 import { isToday } from '../lib/time'
+import { Check, Plus } from 'lucide-react'
 
 const CHIPS: { id: Restriction; label: string; offBg: string; offInk: string }[] = [
   { id: 'gluten', label: 'Glúten', offBg: '#f0f4f1', offInk: '#5c6b63' },
@@ -93,10 +94,11 @@ export default function AlertSettings() {
                   type="button"
                   aria-pressed={on}
                   onClick={() => toggle(c.id)}
-                  className="h-[36px] rounded-[18px] border-0 px-[20px] text-[13px] font-bold"
+                  className="inline-flex h-[36px] items-center gap-[5px] rounded-[18px] border-0 px-[20px] text-[13px] font-bold"
                   style={{ background: on ? '#1f7a4d' : c.offBg, color: on ? '#fff' : c.offInk }}
                 >
-                  {on ? '✓' : '+'} {c.label}
+                  {on ? <Check size={14} strokeWidth={3} aria-hidden /> : <Plus size={14} strokeWidth={2.6} aria-hidden />}
+                  {c.label}
                 </button>
               )
             })}

@@ -6,6 +6,7 @@ import btnBg from '../assets/figma/scanner-btn-bg.svg'
 import captureOuter from '../assets/figma/capture-outer.svg'
 import captureInner from '../assets/figma/capture-inner.svg'
 import { isValidBarcode } from '../lib/off'
+import { X, Zap } from 'lucide-react'
 
 type CamState = 'starting' | 'running' | 'denied' | 'unavailable' | 'insecure'
 
@@ -163,7 +164,7 @@ export default function Scanner() {
           className="relative flex size-[40px] items-center justify-center border-0 bg-transparent p-0 text-[18px] font-bold text-white"
         >
           <img src={btnBg} alt="" width={40} height={40} className="absolute inset-0" />
-          <span className="relative">✕</span>
+          <X size={20} strokeWidth={2.4} className="relative" aria-hidden />
         </button>
         <h1 className="m-0 mt-[8px] text-[16px] font-bold leading-[normal]">Escanear rótulo</h1>
         <button
@@ -176,7 +177,7 @@ export default function Scanner() {
         >
           <img src={btnBg} alt="" width={40} height={40} className="absolute inset-0" style={{ opacity: torch ? 0 : 1 }} />
           {torch && <span className="absolute inset-0 rounded-full bg-[#ffb300]" />}
-          <span className="relative">⚡</span>
+          <Zap size={19} fill={torch ? 'currentColor' : 'none'} className="relative" aria-hidden />
         </button>
       </div>
 

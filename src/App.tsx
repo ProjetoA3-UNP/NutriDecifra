@@ -2,6 +2,7 @@ import { lazy, Suspense, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AppProvider, useApp } from './context/AppContext'
 import { supabaseConfigured } from './lib/supabase'
+import { canAccess, homeFor } from './lib/roles'
 import { Loading } from './components/ui'
 import logo from './assets/figma/logo.png'
 
@@ -12,6 +13,10 @@ import Home from './screens/Home'
 
 // telas carregadas sob demanda (deixa a abertura do app mais rápida)
 const ResetPassword = lazy(() => import('./screens/ResetPassword'))
+const ForgotPassword = lazy(() => import('./screens/ForgotPassword'))
+const NutritionistHome = lazy(() => import('./screens/NutritionistHome'))
+const PatientDetail = lazy(() => import('./screens/PatientDetail'))
+const AdminHome = lazy(() => import('./screens/AdminHome'))
 const Scanner = lazy(() => import('./screens/Scanner'))
 const Analyzing = lazy(() => import('./screens/Analyzing'))
 const Result = lazy(() => import('./screens/Result'))
@@ -26,11 +31,18 @@ const Plans = lazy(() => import('./screens/Plans'))
 const Gamification = lazy(() => import('./screens/Gamification'))
 const Accessibility = lazy(() => import('./screens/Accessibility'))
 
+/**
+ * Protege as telas: exige login e confere se o perfil da conta pode abrir a rota.
+ * Quem tenta abrir a área de outro perfil volta para a própria tela inicial.
+ * (O banco aplica a mesma regra com RLS; isto é só a navegação.)
+ */
 function RequireAuth({ children }: { children: ReactNode }) {
-  const { ready, session } = useApp()
+  const { ready, session, loaded, role } = useApp()
   const location = useLocation()
   if (!ready) return <Loading />
   if (!session) return <Navigate to="/entrar" replace state={{ from: location.pathname }} />
+  if (!loaded) return <Loading />
+  if (!canAccess(role, location.pathname)) return <Navigate to={homeFor(role)} replace />
   return <>{children}</>
 }
 
@@ -89,6 +101,7 @@ function AppRoutes() {
         <Route path="/boas-vindas" element={<Onboarding />} />
         <Route path="/entrar" element={<Auth mode="login" />} />
         <Route path="/cadastrar" element={<Auth mode="signup" />} />
+        <Route path="/recuperar-senha" element={<ForgotPassword />} />
         <Route path="/redefinir-senha" element={<ResetPassword />} />
 
         <Route path="/inicio" element={p(<Home />)} />
@@ -105,6 +118,13 @@ function AppRoutes() {
         <Route path="/planos" element={p(<Plans />)} />
         <Route path="/conquistas" element={p(<Gamification />)} />
         <Route path="/acessibilidade" element={p(<Accessibility />)} />
+
+        {/* Nutricionista */}
+        <Route path="/profissional" element={p(<NutritionistHome />)} />
+        <Route path="/profissional/paciente/:id" element={p(<PatientDetail />)} />
+
+        {/* Administrador */}
+        <Route path="/admin" element={p(<AdminHome />)} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

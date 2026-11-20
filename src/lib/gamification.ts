@@ -2,6 +2,7 @@
 // (leituras, produtos salvos, trocas por alternativas e pontos registrados).
 // XP = pontos.
 import type { PointsEvent, Profile, Scan } from './types'
+import { BookOpen, Compass, Flame, Repeat, Sprout, Target, Trophy, Zap, type LucideIcon } from 'lucide-react'
 import { dayKey, startOfDay, startOfWeek, weekKey } from './time'
 
 export const POINTS = {
@@ -78,7 +79,9 @@ export function healthyChoices(scans: Scan[]) {
 
 export interface Badge {
   id: string
-  icon: string
+  icon: LucideIcon
+  /** cor do ícone quando a conquista está desbloqueada */
+  color: string
   label: string
   description: string
   bg: string
@@ -89,14 +92,14 @@ export function badges(scans: Scan[], points: PointsEvent[], _profile: Profile |
   const distinct = new Set(scans.map((s) => s.barcode)).size
   const best = maxStreak(scans)
   return [
-    { id: 'first', icon: '🏆', label: 'Iniciante', description: 'Leia seu primeiro rótulo', bg: '#ffeccc', unlocked: scans.length >= 1 },
-    { id: 'green', icon: '🌱', label: 'Verde', description: 'Salve um produto com nota A ou B', bg: '#e8f5ee', unlocked: healthyChoices(scans) >= 1 },
-    { id: 'streak3', icon: '🔥', label: 'Sequência', description: 'Leia rótulos 3 dias seguidos', bg: '#fde3e3', unlocked: best >= 3 },
-    { id: 'ten', icon: '📚', label: 'Estudioso', description: 'Leia 10 produtos diferentes', bg: '#e3eefc', unlocked: distinct >= 10 },
-    { id: 'swap', icon: '🔄', label: 'Troca certa', description: 'Troque um produto por uma alternativa melhor', bg: '#e8f5ee', unlocked: scans.some((s) => s.replaced_scan_id) },
-    { id: 'challenge', icon: '🎯', label: 'Desafiante', description: 'Complete um desafio da semana', bg: '#fff4ec', unlocked: points.some((p) => p.reason === 'weekly_challenge') },
-    { id: 'streak7', icon: '⚡', label: 'Maratona', description: 'Leia rótulos 7 dias seguidos', bg: '#fff8e0', unlocked: best >= 7 },
-    { id: 'explorer', icon: '🧭', label: 'Explorador', description: 'Leia 25 produtos diferentes', bg: '#e3eefc', unlocked: distinct >= 25 },
+    { id: 'first', icon: Trophy, color: '#c98a00', label: 'Iniciante', description: 'Leia seu primeiro rótulo', bg: '#ffeccc', unlocked: scans.length >= 1 },
+    { id: 'green', icon: Sprout, color: '#1f7a4d', label: 'Verde', description: 'Salve um produto com nota A ou B', bg: '#e8f5ee', unlocked: healthyChoices(scans) >= 1 },
+    { id: 'streak3', icon: Flame, color: '#e84141', label: 'Sequência', description: 'Leia rótulos 3 dias seguidos', bg: '#fde3e3', unlocked: best >= 3 },
+    { id: 'ten', icon: BookOpen, color: '#2f6fd6', label: 'Estudioso', description: 'Leia 10 produtos diferentes', bg: '#e3eefc', unlocked: distinct >= 10 },
+    { id: 'swap', icon: Repeat, color: '#1f7a4d', label: 'Troca certa', description: 'Troque um produto por uma alternativa melhor', bg: '#e8f5ee', unlocked: scans.some((s) => s.replaced_scan_id) },
+    { id: 'challenge', icon: Target, color: '#ff8a3d', label: 'Desafiante', description: 'Complete um desafio da semana', bg: '#fff4ec', unlocked: points.some((p) => p.reason === 'weekly_challenge') },
+    { id: 'streak7', icon: Zap, color: '#c98a00', label: 'Maratona', description: 'Leia rótulos 7 dias seguidos', bg: '#fff8e0', unlocked: best >= 7 },
+    { id: 'explorer', icon: Compass, color: '#2f6fd6', label: 'Explorador', description: 'Leia 25 produtos diferentes', bg: '#e3eefc', unlocked: distinct >= 25 },
   ]
 }
 

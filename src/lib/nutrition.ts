@@ -140,54 +140,11 @@ export function gradeGroup(g: Grade | null): 'good' | 'attention' | 'bad' | 'unk
 }
 
 // ---------------------------------------------------------------------------
-// Emoji do produto (o Figma usa emojis nos quadradinhos; usamos a categoria
-// real do produto para escolher — e mostramos a foto quando existir)
-// ---------------------------------------------------------------------------
-const CATEGORY_EMOJI: [RegExp, string][] = [
-  [/biscuit|cookie|wafer/, '🍪'],
-  [/chocolate|cocoa/, '🍫'],
-  [/candies|confectioner|candy|bonbon/, '🍬'],
-  [/juice|nectar/, '🧃'],
-  [/soda|soft-drink|carbonated/, '🥤'],
-  [/water/, '💧'],
-  [/coffee/, '☕'],
-  [/tea\b|teas/, '🍵'],
-  [/milk|dairy-drink/, '🥛'],
-  [/yogurt|yoghurt/, '🥛'],
-  [/cheese/, '🧀'],
-  [/bread|toast/, '🍞'],
-  [/cereal|granola|muesli|oat/, '🥣'],
-  [/bar/, '🍫'],
-  [/nut|peanut|almond|cashew/, '🥜'],
-  [/chips|crisps/, '🥔'],
-  [/apple/, '🍎'],
-  [/banana/, '🍌'],
-  [/fruit/, '🍓'],
-  [/vegetable|salad/, '🥗'],
-  [/pasta|noodle/, '🍝'],
-  [/rice/, '🍚'],
-  [/bean|legume/, '🫘'],
-  [/meat|sausage|ham|chicken/, '🍖'],
-  [/fish|tuna|sardine/, '🐟'],
-  [/ice-cream/, '🍨'],
-  [/cake|pastr/, '🍰'],
-  [/sauce|ketchup|mayonnaise/, '🥫'],
-  [/oil|butter|margarine/, '🧈'],
-  [/beer|wine|alcohol/, '🍷'],
-]
-export function productEmoji(p: Pick<OffProduct, 'categories_tags' | 'categories_hierarchy'>): string {
-  const cats = (p.categories_hierarchy ?? p.categories_tags ?? []).join(' ').toLowerCase()
-  for (const [re, emoji] of CATEGORY_EMOJI) if (re.test(cats)) return emoji
-  return '🛒'
-}
-
-// ---------------------------------------------------------------------------
 // Alertas personalizados
 // ---------------------------------------------------------------------------
 export interface ProductAlert {
   kind: AlertKind
   severity: Severity
-  emoji: string
   /** frase curta usada na tela de resultado */
   short: string
   /** título e descrição usados na tela de alertas */
@@ -204,14 +161,14 @@ export function productAlerts(p: OffProduct, profile: Profile | null): ProductAl
 
   if (r.has('gluten') && has(p.allergens_tags, 'en:gluten')) {
     out.push({
-      kind: 'gluten', severity: 'critical', emoji: '🚫',
+      kind: 'gluten', severity: 'critical',
       short: 'Contém glúten · você marcou intolerância',
       title: 'Glúten detectado',
       description: 'Produto contém ingrediente que você marcou como restrição alimentar.',
     })
   } else if (r.has('gluten') && has(p.traces_tags, 'en:gluten')) {
     out.push({
-      kind: 'gluten_traces', severity: 'attention', emoji: '⚠️',
+      kind: 'gluten_traces', severity: 'attention',
       short: 'Pode conter traços de glúten',
       title: 'Pode conter glúten',
       description: 'O fabricante informa que o produto pode conter traços de glúten.',
@@ -219,14 +176,14 @@ export function productAlerts(p: OffProduct, profile: Profile | null): ProductAl
   }
   if (r.has('lactose') && has(p.allergens_tags, 'en:milk')) {
     out.push({
-      kind: 'lactose', severity: 'critical', emoji: '🚫',
+      kind: 'lactose', severity: 'critical',
       short: 'Contém leite (lactose) · você marcou intolerância',
       title: 'Lactose detectada',
       description: 'Produto contém leite ou derivados, que você marcou como restrição alimentar.',
     })
   } else if (r.has('lactose') && has(p.traces_tags, 'en:milk')) {
     out.push({
-      kind: 'lactose_traces', severity: 'attention', emoji: '⚠️',
+      kind: 'lactose_traces', severity: 'attention',
       short: 'Pode conter traços de leite',
       title: 'Pode conter leite',
       description: 'O fabricante informa que o produto pode conter traços de leite.',
@@ -234,7 +191,7 @@ export function productAlerts(p: OffProduct, profile: Profile | null): ProductAl
   }
   if (a.sugar100 !== null && p.nutrient_levels?.sugars === 'high') {
     out.push({
-      kind: 'sugar', severity: r.has('sugar') ? 'critical' : 'attention', emoji: '🍬',
+      kind: 'sugar', severity: r.has('sugar') ? 'critical' : 'attention',
       short: `Alto teor de açúcar (${fmt(a.sugar100)} g em 100 ${isLiquid(p) ? 'ml' : 'g'})`,
       title: 'Alto teor de açúcar',
       description: `Contém ${fmt(a.sugar100)} g de açúcar a cada 100 ${isLiquid(p) ? 'ml' : 'g'}.`,
@@ -242,7 +199,7 @@ export function productAlerts(p: OffProduct, profile: Profile | null): ProductAl
   }
   if (a.satFat100 !== null && p.nutrient_levels?.['saturated-fat'] === 'high') {
     out.push({
-      kind: 'sat_fat', severity: 'attention', emoji: '⚠️',
+      kind: 'sat_fat', severity: 'attention',
       short: `Alto teor de gordura saturada (${fmt(a.satFat100)}g)`,
       title: 'Alto teor de gordura saturada',
       description: `Contém ${fmt(a.satFat100)} g de gordura saturada a cada 100 ${isLiquid(p) ? 'ml' : 'g'}.`,
@@ -252,7 +209,7 @@ export function productAlerts(p: OffProduct, profile: Profile | null): ProductAl
   if (a.sodiumBasisMg !== null && (a.sodiumBasisMg > sodiumLimit || p.nutrient_levels?.salt === 'high')) {
     const over = a.sodiumBasisMg > sodiumLimit
     out.push({
-      kind: 'sodium', severity: r.has('sodium') ? 'critical' : 'attention', emoji: '🧂',
+      kind: 'sodium', severity: r.has('sodium') ? 'critical' : 'attention',
       short: over
         ? `Sódio acima do seu limite (${fmt(a.sodiumBasisMg, 0)} mg ${a.basis.label})`
         : `Alto teor de sódio (${fmt(a.sodium100mg ?? 0, 0)} mg em 100 g)`,
@@ -265,7 +222,7 @@ export function productAlerts(p: OffProduct, profile: Profile | null): ProductAl
   if (a.additives !== null && a.additives > 0) {
     const ultra = a.nova === 4
     out.push({
-      kind: 'additives', severity: 'attention', emoji: '🧪',
+      kind: 'additives', severity: 'attention',
       short: `Possui ${a.additives} ${a.additives === 1 ? 'aditivo' : 'aditivos'}${ultra ? ' · ultraprocessado' : ''}`,
       title: ultra ? 'Aditivos ultraprocessados' : 'Aditivos alimentares',
       description: `Produto possui ${a.additives} ${a.additives === 1 ? 'aditivo alimentar' : 'aditivos alimentares'}${
@@ -309,22 +266,4 @@ export function alertTone(kind: AlertKind, severity: Severity) {
   if (severity === 'critical') return { bg: '#fdecec', ink: '#9b1c1c', stripe: '#e84141' }
   if (kind === 'additives') return { bg: '#fff8e0', ink: '#7a5c00', stripe: '#ffb300' }
   return { bg: '#fff4ec', ink: '#9a4a18', stripe: '#ff8a3d' }
-}
-
-export function alertEmoji(kind: AlertKind, severity: Severity): string {
-  if (severity === 'positive') return '✅'
-  switch (kind) {
-    case 'gluten':
-    case 'lactose':
-      return '🚫'
-    case 'sugar':
-    case 'daily_sugar':
-      return '🍬'
-    case 'sodium':
-      return '🧂'
-    case 'additives':
-      return '🧪'
-    default:
-      return '⚠️'
-  }
 }

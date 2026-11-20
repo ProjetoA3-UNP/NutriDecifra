@@ -2,33 +2,35 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import circle from '../assets/figma/onb-circle.svg'
 import { ONBOARDING_KEY } from './Splash'
+import { Ban, Bell, Candy, ChartPie, Repeat, Salad, Trophy } from 'lucide-react'
+import { SaltIcon, SpoonIcon } from '../components/icons'
 
 const PAGES = [
   {
-    emoji: '🥗',
+    Icon: Salad,
     tag: 'PROPOSTA DE VALOR',
     title: 'Tradução prática e personalizada de rótulos',
     cards: [
-      { icon: '🥄', text: ['Equivalente a 7 colheres', 'de açúcar'], bg: '#f4faf6' },
-      { icon: '📊', text: ['85% da sua cota diária', 'de açúcar'], bg: '#fff4ec' },
+      { Icon: SpoonIcon, color: '#1f7a4d', text: ['Equivalente a 7 colheres', 'de açúcar'], bg: '#f4faf6' },
+      { Icon: ChartPie, color: '#ff8a3d', text: ['85% da sua cota diária', 'de açúcar'], bg: '#fff4ec' },
     ],
   },
   {
-    emoji: '🔔',
+    Icon: Bell,
     tag: 'ALERTAS PERSONALIZADOS',
     title: 'Avisos feitos para o seu perfil',
     cards: [
-      { icon: '🚫', text: ['Contém glúten · você', 'marcou intolerância'], bg: '#fdecec' },
-      { icon: '🧂', text: ['Sódio acima do limite', 'que você definiu'], bg: '#fff4ec' },
+      { Icon: Ban, color: '#e84141', text: ['Contém glúten · você', 'marcou intolerância'], bg: '#fdecec' },
+      { Icon: SaltIcon, color: '#ff8a3d', text: ['Sódio acima do limite', 'que você definiu'], bg: '#fff4ec' },
     ],
   },
   {
-    emoji: '🔄',
+    Icon: Repeat,
     tag: 'ESCOLHAS MELHORES',
     title: 'Alternativas mais saudáveis em segundos',
     cards: [
-      { icon: '🍫', text: ['Produtos da mesma categoria', 'com nota melhor'], bg: '#f4faf6' },
-      { icon: '🏆', text: ['Pontos e conquistas a cada', 'boa escolha'], bg: '#fff8e0' },
+      { Icon: Candy, color: '#1f7a4d', text: ['Produtos da mesma categoria', 'com nota melhor'], bg: '#f4faf6' },
+      { Icon: Trophy, color: '#c98a00', text: ['Pontos e conquistas a cada', 'boa escolha'], bg: '#fff8e0' },
     ],
   },
 ]
@@ -64,7 +66,7 @@ export default function Onboarding() {
         <div className="animate-fadeup flex h-[260px] items-center justify-center rounded-[24px] bg-brand-tint">
           <div className="relative flex h-[110px] w-[112px] items-center justify-center">
             <img src={circle} alt="" width={112} height={110} className="absolute inset-0" />
-            <span className="relative text-[64px] leading-none">{p.emoji}</span>
+            <p.Icon size={56} strokeWidth={1.7} className="relative text-brand" aria-hidden />
           </div>
         </div>
         <p className="m-0 mt-[12px] text-[12px] font-bold leading-[normal] text-brand">{p.tag}</p>
@@ -72,8 +74,8 @@ export default function Onboarding() {
         <p className="m-0 mt-[14px] text-[15px] leading-[normal] text-muted">Exemplos do que você vai ver:</p>
         <div className="mt-[21px] flex flex-col gap-[13px]">
           {p.cards.map((c) => (
-            <div key={c.icon} className="flex h-[62px] items-center gap-[20px] rounded-[14px] px-[15px]" style={{ background: c.bg }}>
-              <span className="text-[28px] leading-none">{c.icon}</span>
+            <div key={c.text[0]} className="flex h-[62px] items-center gap-[20px] rounded-[14px] px-[15px]" style={{ background: c.bg }}>
+              <c.Icon size={28} style={{ color: c.color }} className="shrink-0" aria-hidden />
               <p className="m-0 text-[14px] font-medium leading-[normal] text-ink">
                 {c.text[0]}
                 <br />

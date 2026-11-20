@@ -5,6 +5,7 @@ import { BackSquare, ProductThumb, ScoreBadge, Screen } from '../components/ui'
 import { gradeGroup } from '../lib/nutrition'
 import { relativeTime } from '../lib/time'
 import { scanHighlight } from '../lib/summary'
+import { ArrowRight } from 'lucide-react'
 
 const FILTERS = [
   { id: 'all', label: 'Todos' },
@@ -64,14 +65,15 @@ export default function History() {
               to={`/resultado/${s.id}`}
               className="flex h-[78px] items-center rounded-[16px] bg-white px-[14px] no-underline"
             >
-              <ProductThumb product={s.product} imageUrl={s.image_url} grade={s.nutriscore} size={48} radius={14} emojiSize={24} />
+              <ProductThumb product={s.product} imageUrl={s.image_url} grade={s.nutriscore} size={48} radius={14} iconSize={22} />
               <div className="ml-[14px] min-w-0 flex-1">
                 <p className="m-0 truncate text-[14px] font-bold leading-[normal] text-ink">{s.product_name}</p>
                 <p className="m-0 mt-[5px] truncate text-[12px] leading-[normal] text-muted">
                   {relativeTime(s.created_at, 'day')} · {scanHighlight(s, profile)}
                 </p>
-                <p className="m-0 mt-[5px] text-[11px] font-bold leading-[normal] text-brand">
-                  Ver análise →{s.saved && <span className="ml-[8px] font-medium text-faint">salvo</span>}
+                <p className="m-0 mt-[5px] flex items-center gap-[3px] text-[11px] font-bold leading-[normal] text-brand">
+                  Ver análise <ArrowRight size={12} strokeWidth={2.5} aria-hidden />
+                  {s.saved && <span className="ml-[8px] font-medium text-faint">salvo</span>}
                 </p>
               </div>
               <span className="ml-[8px] mr-[2px]">

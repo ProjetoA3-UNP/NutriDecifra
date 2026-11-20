@@ -6,8 +6,10 @@ import { useScan } from '../lib/useScan'
 import { alternativesFor } from '../lib/altCache'
 import { soldInBrazil } from '../lib/off'
 import { compare } from '../lib/compare'
-import { analyze, fmt, gradeOf, isLiquid, nutrient100, productBrand, productEmoji, productName, spoonsText } from '../lib/nutrition'
+import { analyze, fmt, gradeOf, isLiquid, nutrient100, productBrand, productName, spoonsText } from '../lib/nutrition'
 import type { OffProduct } from '../lib/types'
+import { ProductIcon } from '../components/icons'
+import { ArrowRight } from 'lucide-react'
 
 /** 08 · Alternativas */
 export default function Alternatives() {
@@ -59,7 +61,9 @@ export default function Alternatives() {
           VOCÊ ESCANEOU
         </span>
         <span className="mt-[7px] flex items-center">
-          <span className="w-[44px] shrink-0 text-[28px] leading-none">{productEmoji(scan.product)}</span>
+          <span className="flex w-[44px] shrink-0 text-ink/70">
+            <ProductIcon product={scan.product} size={28} />
+          </span>
           <span className="min-w-0">
             <span className="block truncate text-[13px] font-bold leading-[normal] text-ink">{scan.product_name}</span>
             <span className="mt-[3px] block text-[11px] leading-[normal]" style={{ color: bad ? '#9b1c1c' : '#1f7a4d' }}>
@@ -115,7 +119,7 @@ export default function Alternatives() {
                   grade={gradeOf(p)}
                   size={68}
                   radius={14}
-                  emojiSize={38}
+                  iconSize={32}
                 />
                 <div className="ml-[16px] min-w-0 flex-1 pr-[50px]">
                   <p className="m-0 line-clamp-2 text-[12px] font-bold leading-[1.25] text-ink">{productName(p)}</p>
@@ -142,7 +146,9 @@ export default function Alternatives() {
                 <span className="text-[12px] font-medium leading-[normal] text-muted">
                   {sugar !== null ? `Açúcar: ${fmt(sugar)} g em 100 ${isLiquid(p) ? 'ml' : 'g'}` : 'Açúcar não informado'}
                 </span>
-                <span className="text-[12px] font-bold leading-[normal] text-brand">Ver detalhes →</span>
+                <span className="inline-flex items-center gap-[3px] text-[12px] font-bold leading-[normal] text-brand">
+                  Ver detalhes <ArrowRight size={13} strokeWidth={2.5} aria-hidden />
+                </span>
               </div>
             </Link>
           )

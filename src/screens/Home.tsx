@@ -7,6 +7,7 @@ import avatarBg from '../assets/figma/home-avatar.svg'
 import bellBadge from '../assets/figma/home-bell-badge.svg'
 import heroDecor from '../assets/figma/home-hero-decor.svg'
 import heroDecorInner from '../assets/figma/home-hero-decor-inner.svg'
+import { Bell, Camera, ClipboardList, ScanSearch, TriangleExclamationPoint } from 'lucide-react'
 
 /** 04 · Home */
 export default function Home() {
@@ -27,15 +28,15 @@ export default function Home() {
             <span className="relative text-[20px] font-bold text-white">{name.charAt(0).toUpperCase()}</span>
           </Link>
           <div className="ml-[12px] mt-[4px] flex-1">
-            <p className="m-0 text-[17px] font-bold leading-[normal] text-ink">Olá, {name} 👋</p>
+            <p className="m-0 text-[17px] font-bold leading-[normal] text-ink">Olá, {name}</p>
             <p className="m-0 mt-[3px] text-[13px] leading-[normal] text-muted">Pronto para decifrar?</p>
           </div>
           <Link
             to="/alertas"
             aria-label={activeAlerts ? `${activeAlerts} alertas novos` : 'Alertas'}
-            className="relative mt-[4px] flex size-[44px] items-center justify-center rounded-[14px] bg-white text-[20px] no-underline"
+            className="relative mt-[4px] flex size-[44px] items-center justify-center rounded-[14px] bg-white text-ink no-underline"
           >
-            🔔
+            <Bell size={21} aria-hidden />
             {activeAlerts > 0 && <img src={bellBadge} alt="" width={10} height={10} className="absolute right-[4px] top-[4px]" />}
           </Link>
         </div>
@@ -48,29 +49,30 @@ export default function Home() {
         >
           <img src={heroDecor} alt="" width={130} height={130} className="decor absolute right-[5.5px] top-[17.6px]" />
           <img src={heroDecorInner} alt="" width={80} height={80} className="decor absolute right-[30px] top-[42px]" />
-          <span className="decor absolute right-[43px] top-[55px] text-[50px] leading-none">🔍</span>
+          <ScanSearch size={46} strokeWidth={1.8} className="decor absolute right-[47px] top-[59px] text-white" aria-hidden />
           <span className="absolute left-[20px] top-[28px] text-[22px] font-bold leading-[normal] text-white">Escanear rótulo</span>
           <span className="absolute left-[20px] top-[60px] text-[13px] leading-[normal] text-brand-mint">
             Aponte a câmera para o
             <br />
             código de barras do produto
           </span>
-          <span className="absolute left-[20px] top-[110px] flex h-[42px] w-[148px] items-center rounded-[12px] bg-white pl-[16px] text-[14px] font-bold text-brand">
-            📷&nbsp;&nbsp;Abrir câmera
+          <span className="absolute left-[20px] top-[110px] flex h-[42px] w-[148px] items-center rounded-[12px] bg-white gap-[8px] pl-[16px] text-[14px] font-bold text-brand">
+            <Camera size={18} strokeWidth={2.2} aria-hidden />
+            Abrir câmera
           </span>
         </button>
 
         {/* estatísticas */}
         <div className="mt-[24px] flex gap-[11px]">
           <Link to="/historico" className="relative h-[96px] flex-1 rounded-[18px] bg-white no-underline">
-            <span className="absolute left-[16px] top-[14px] text-[22px] leading-none">📋</span>
+            <ClipboardList size={22} className="absolute left-[16px] top-[14px] text-brand" aria-hidden />
             <span className="absolute left-[16px] top-[42px] text-[26px] font-bold leading-[normal] text-ink">{readToday}</span>
             <span className="absolute left-[46px] top-[52px] text-[12px] leading-[normal] text-muted">
               {readToday === 1 ? 'Lido hoje' : 'Lidos hoje'}
             </span>
           </Link>
           <Link to="/alertas" className="relative h-[96px] flex-1 rounded-[18px] bg-white no-underline">
-            <span className="absolute left-[16px] top-[14px] text-[22px] leading-none">⚠️</span>
+            <TriangleExclamationPoint size={22} className="absolute left-[16px] top-[14px] text-score-d" aria-hidden />
             <span className="absolute left-[16px] top-[42px] text-[26px] font-bold leading-[normal] text-ink">{activeAlerts}</span>
             <span className="absolute left-[46px] top-[52px] text-[12px] leading-[normal] text-muted">
               {activeAlerts === 1 ? 'Alerta ativo' : 'Alertas ativos'}
@@ -99,7 +101,7 @@ export default function Home() {
               to={`/resultado/${s.id}`}
               className="flex h-[70px] items-center rounded-[16px] bg-white px-[12px] no-underline"
             >
-              <ProductThumb product={s.product} imageUrl={s.image_url} grade={s.nutriscore} size={46} radius={12} emojiSize={24} />
+              <ProductThumb product={s.product} imageUrl={s.image_url} grade={s.nutriscore} size={46} radius={12} iconSize={22} />
               <div className="ml-[14px] min-w-0 flex-1">
                 <p className="m-0 truncate text-[14px] font-bold leading-[normal] text-ink">{s.product_name}</p>
                 <p className="m-0 mt-[5px] truncate text-[12px] leading-[normal] text-muted">

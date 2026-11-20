@@ -2,8 +2,10 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import navScanBg from '../assets/figma/nav-scan-bg.svg'
 import type { Grade } from '../lib/types'
-import { gradeColor, gradeTint, productEmoji } from '../lib/nutrition'
+import { gradeColor, gradeTint } from '../lib/nutrition'
 import type { OffProduct } from '../lib/types'
+import { ArrowLeft, Camera, ClipboardList, House, TriangleExclamationPoint, User, type LucideIcon } from 'lucide-react'
+import { ProductIcon } from './icons'
 
 /** Área da tela (375×812 no Figma). Rola por dentro; a barra inferior fica fixa. */
 export function Screen({
@@ -27,7 +29,7 @@ export function Screen({
 
 /** Barra de navegação inferior (Início · Histórico · Câmera · Alertas · Perfil) */
 export function BottomNav() {
-  const item = (to: string, emoji: string, label: string) => (
+  const item = (to: string, Icon: LucideIcon, label: string) => (
     <NavLink
       to={to}
       end
@@ -36,7 +38,9 @@ export function BottomNav() {
     >
       {({ isActive }) => (
         <>
-          <span className="text-[22px] leading-[27px]">{emoji}</span>
+          <span className={`flex h-[27px] items-center ${isActive ? 'text-brand' : 'text-muted'}`}>
+            <Icon size={22} strokeWidth={isActive ? 2.3 : 1.9} aria-hidden />
+          </span>
           <span className={`mt-[1px] ${isActive ? 'font-bold text-brand' : 'font-normal text-muted'}`}>{label}</span>
         </>
       )}
@@ -45,8 +49,8 @@ export function BottomNav() {
   return (
     <nav className="absolute inset-x-0 bottom-0 z-20 h-[64px] bg-white pb-[env(safe-area-inset-bottom)]">
       <div className="grid h-full grid-cols-5">
-        {item('/inicio', '🏠', 'Início')}
-        {item('/historico', '📋', 'Histórico')}
+        {item('/inicio', House, 'Início')}
+        {item('/historico', ClipboardList, 'Histórico')}
         <div className="relative flex justify-center">
           <NavLink
             to="/scanner"
@@ -54,17 +58,17 @@ export function BottomNav() {
             className="absolute top-[-13px] flex size-[56px] items-center justify-center rounded-full"
           >
             <img src={navScanBg} alt="" width={56} height={56} className="absolute inset-0" />
-            <span className="relative text-[26px] leading-none">📷</span>
+            <Camera size={24} strokeWidth={2.2} className="relative text-white" aria-hidden />
           </NavLink>
         </div>
-        {item('/alertas', '⚠️', 'Alertas')}
-        {item('/perfil', '👤', 'Perfil')}
+        {item('/alertas', TriangleExclamationPoint, 'Alertas')}
+        {item('/perfil', User, 'Perfil')}
       </div>
     </nav>
   )
 }
 
-/** Seta "←" simples (Resultado, Alternativas, Planos...) */
+/** Seta de voltar simples (Resultado, Alternativas, Planos...) */
 export function BackArrow({ to, onClick, light = false }: { to?: string; onClick?: () => void; light?: boolean }) {
   const navigate = useNavigate()
   return (
@@ -76,7 +80,7 @@ export function BackArrow({ to, onClick, light = false }: { to?: string; onClick
         light ? 'text-white' : 'text-ink'
       }`}
     >
-      ←
+      <ArrowLeft size={24} strokeWidth={2.3} aria-hidden />
     </button>
   )
 }
@@ -91,7 +95,7 @@ export function BackSquare({ to }: { to?: string }) {
       onClick={() => (to ? navigate(to) : navigate(-1))}
       className="flex size-[44px] shrink-0 items-center justify-center rounded-[14px] border-0 bg-white text-[22px] font-bold text-ink"
     >
-      ←
+      <ArrowLeft size={22} strokeWidth={2.3} aria-hidden />
     </button>
   )
 }
@@ -122,14 +126,14 @@ export function ScoreBadge({
   )
 }
 
-/** Quadradinho do produto: foto real quando existe, senão o emoji da categoria (como no Figma) */
+/** Quadradinho do produto: foto real quando existe, senão o ícone da categoria */
 export function ProductThumb({
   product,
   imageUrl,
   grade,
   size,
   radius,
-  emojiSize,
+  iconSize,
   tint,
 }: {
   product: Pick<OffProduct, 'categories_tags' | 'categories_hierarchy'>
@@ -137,7 +141,7 @@ export function ProductThumb({
   grade: Grade | null
   size: number
   radius: number
-  emojiSize: number
+  iconSize: number
   tint?: string
 }) {
   const [failed, setFailed] = useState(false)
@@ -155,7 +159,7 @@ export function ProductThumb({
           className="size-full object-contain p-[4px] mix-blend-multiply"
         />
       ) : (
-        <span style={{ fontSize: emojiSize, lineHeight: 1 }}>{productEmoji(product)}</span>
+        <ProductIcon product={product} size={iconSize} className="text-ink/70" />
       )}
     </div>
   )

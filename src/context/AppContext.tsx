@@ -1,12 +1,17 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase, supabaseConfigured } from '../lib/supabase'
-import type { AccessibilityPrefs, AlertRow, PointsEvent, Profile, Scan } from '../lib/types'
+import type { AccessibilityPrefs, AlertRow, PointsEvent, Profile, Role, Scan } from '../lib/types'
+import { roleOf } from '../lib/roles'
 
 interface AppState {
   ready: boolean
   session: Session | null
   profile: Profile | null
+  /** perfil de acesso da conta logada (consumer quando ainda não carregou) */
+  role: Role
+  /** true quando os dados da sessão atual já foram carregados do banco */
+  loaded: boolean
   scans: Scan[]
   alerts: AlertRow[]
   points: PointsEvent[]
@@ -36,20 +41,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [ready, setReady] = useState(false)
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
+  const [loadedFor, setLoadedFor] = useState<string | null>(null)
   const [scans, setScans] = useState<Scan[]>([])
   const [alerts, setAlerts] = useState<AlertRow[]>([])
   const [points, setPoints] = useState<PointsEvent[]>([])
   const [a11y, setA11yState] = useState<AccessibilityPrefs>(readLocalA11y)
 
-  const load = useCallback(async (s: Session | null) => {
-    if (!s) {
-      setProfile(null)
-      setScans([])
-      setAlerts([])
-      setPoints([])
-      return
-    }
-    const uid = s.user.id
+  const loadUser = useCallback(async (s: Session, uid: string) => {
     const [p, sc, al, pt] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', uid).maybeSingle(),
       supabase.from('scans').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(500),
@@ -83,6 +81,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [])
+
+  const load = useCallback(async (s: Session | null) => {
+    if (!s) {
+      setProfile(null)
+      setScans([])
+      setAlerts([])
+      setPoints([])
+      setLoadedFor(null)
+      return
+    }
+    const uid = s.user.id
+    try {
+      await loadUser(s, uid)
+    } finally {
+      setLoadedFor(uid)
+    }
+  }, [loadUser])
 
   useEffect(() => {
     if (!supabaseConfigured) {
@@ -145,6 +160,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       ready,
       session,
       profile,
+      role: roleOf(profile),
+      loaded: Boolean(session && loadedFor === session.user.id),
       scans,
       alerts,
       points,
@@ -154,7 +171,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       a11y,
       setA11y,
     }),
-    [ready, session, profile, scans, alerts, points, refresh, updateProfile, a11y, setA11y],
+    [ready, session, profile, loadedFor, scans, alerts, points, refresh, updateProfile, a11y, setA11y],
   )
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>

@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase'
 import { useApp } from '../context/AppContext'
 import { ErrorBox, Spinner, Toast } from '../components/ui'
 import logo from '../assets/figma/logo.png'
+import { Check, Eye, EyeOff } from 'lucide-react'
 
 const AFTER_SIGNUP_KEY = 'nd.afterSignup'
 
@@ -88,19 +89,6 @@ export default function Auth({ mode }: { mode: 'login' | 'signup' }) {
     } finally {
       setBusy(false)
     }
-  }
-
-  async function forgot() {
-    setError(null)
-    setInfo(null)
-    if (!email.trim()) return setError('Digite seu e-mail acima e toque de novo em "Esqueci minha senha".')
-    setBusy(true)
-    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/redefinir-senha`,
-    })
-    setBusy(false)
-    if (error) setError(translateAuthError(error.message))
-    else setInfo(`Se existir uma conta com ${email.trim()}, você vai receber um link para criar uma nova senha.`)
   }
 
   async function google() {
@@ -204,26 +192,29 @@ export default function Auth({ mode }: { mode: 'login' | 'signup' }) {
             type="button"
             onClick={() => setShowPass((v) => !v)}
             aria-label={showPass ? 'Esconder senha' : 'Mostrar senha'}
-            className="absolute right-[4px] top-[4px] flex size-[44px] items-center justify-center border-0 bg-transparent text-[18px]"
-            style={{ opacity: showPass ? 1 : 0.85 }}
+            className="absolute right-[4px] top-[4px] flex size-[44px] items-center justify-center border-0 bg-transparent text-muted"
           >
-            👁
+            {showPass ? <EyeOff size={20} aria-hidden /> : <Eye size={20} aria-hidden />}
           </button>
         </div>
 
         <div className="mt-[13px] flex justify-end">
           {isLogin ? (
-            <button type="button" onClick={forgot} className="-mr-[3px] border-0 bg-transparent p-0 text-[13px] font-medium text-brand">
+            <Link
+              to="/recuperar-senha"
+              state={{ email: email.trim() }}
+              className="-mr-[3px] text-[13px] font-medium text-brand no-underline"
+            >
               Esqueci minha senha
-            </button>
+            </Link>
           ) : (
             <button
               type="button"
               onClick={() => setProfileLater((v) => !v)}
               aria-pressed={profileLater}
-              className="-mr-[3px] border-0 bg-transparent p-0 text-[13px] font-medium text-brand"
+              className="-mr-[3px] inline-flex items-center gap-[4px] border-0 bg-transparent p-0 text-[13px] font-medium text-brand"
             >
-              {profileLater ? '✓ ' : ''}Criar perfil depois
+              {profileLater && <Check size={14} strokeWidth={3} aria-hidden />}Criar perfil depois
             </button>
           )}
         </div>

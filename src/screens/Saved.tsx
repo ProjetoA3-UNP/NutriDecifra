@@ -2,6 +2,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import savedBg from '../assets/figma/saved-icon-bg.svg'
 import type { SaveResult } from '../lib/actions'
+import { Check, Trophy } from 'lucide-react'
 import { POINTS, levelInfo, streakDays, totalPoints } from '../lib/gamification'
 
 /** 15 · Produto salvo */
@@ -22,7 +23,7 @@ export default function Saved() {
       <div className="flex shrink-0 flex-col items-center pt-[96px]">
         <div className="relative flex size-[132px] items-center justify-center">
           <img src={savedBg} alt="" width={132} height={132} className="absolute inset-0" />
-          <span className="relative text-[72px] font-bold leading-none text-white">✓</span>
+          <Check size={64} strokeWidth={3} className="relative text-white" aria-hidden />
         </div>
         <h1 className="m-0 mt-[32px] text-[28px] font-bold leading-[normal] text-ink">
           {swapped ? 'Alternativa escolhida' : 'Produto salvo'}
@@ -31,7 +32,9 @@ export default function Saved() {
       </div>
 
       <div className="mt-[34px] flex min-h-[128px] shrink-0 items-center rounded-[22px] bg-white px-[20px] py-[20px]">
-        <span className="text-[40px] leading-none">🏆</span>
+        <span className="flex size-[56px] shrink-0 items-center justify-center rounded-full bg-[#fff3c4] text-[#c98a00]">
+          <Trophy size={30} aria-hidden />
+        </span>
         <div className="ml-[16px]">
           <p className="m-0 text-[22px] font-bold leading-[normal] text-ink">
             {state.pointsEarned > 0 ? `+${state.pointsEarned} pontos` : 'Produto já pontuado'}
