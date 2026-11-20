@@ -267,6 +267,12 @@ Mestre dos rótulos (3500), Lenda NutriDecifra (6000).
 
 ---
 
+## Uso de IA no desenvolvimento
+
+Este projeto utilizou ferramentas de IA no desenvolvimento.
+
+---
+
 ## Aviso
 
 O NutriDecifra é informativo e não substitui a orientação de nutricionistas ou médicos. Os dados vêm de uma base
